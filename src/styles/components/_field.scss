@@ -1,0 +1,40 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 6px;
+}
+
+.field__label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text);
+
+  margin-bottom: 6px;
+  display: block;
+  line-height: 1;
+}
+
+.field__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.field__error {
+  font-size: 0.75rem;
+  color: var(--color-danger);
+  height: 1.1em;
+  line-height: 1.1;
+  visibility: hidden;
+}
+
+.field[data-invalid="true"] .field__error {
+  visibility: visible;
+}
+
+.field[data-invalid="true"] .input,
+.field[data-invalid="true"] .select {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25);
+}

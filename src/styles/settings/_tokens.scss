@@ -1,0 +1,103 @@
+@use "sass:map";
+
+$colors-light: (
+  bg: #f8fafc,
+  surface: #ffffff,
+  surface-elevated: #f1f5f9,
+  border-subtle: #e2e8f0,
+  text: #0f172a,
+  text-muted: #475569,
+  primary: #4f46e5,
+  primary-soft: rgba(79, 70, 229, 0.14),
+  on-primary: #ffffff,
+  danger: #ef4444,
+  accent: #22c55e,
+  priority-high: #dc2626,
+  priority-high-soft: rgba(220, 38, 38, 0.14),
+  priority-high-contrast: #b91c1c,
+  priority-medium: #6366f1,
+  priority-medium-soft: rgba(99, 102, 241, 0.14),
+  priority-medium-contrast: #4338ca,
+  priority-low: #22c55e,
+  priority-low-soft: rgba(34, 197, 94, 0.14),
+  priority-low-contrast: #166534,
+  status-active: #2563eb,
+  status-active-soft: rgba(37, 99, 235, 0.15),
+  status-completed: #16a34a,
+  status-completed-soft: rgba(22, 163, 74, 0.15),
+  checkbox-bg: #e2e8f0,
+  checkbox-border: #cbd5e1,
+  checkbox-hover-bg: #ffffff,
+  checkbox-hover-border: #a5b4fc,
+  checkbox-ring: rgba(79, 70, 229, 0.35),
+  checkbox-ring-strong: rgba(79, 70, 229, 0.75),
+  checkbox-start: #6ee7b7,
+  checkbox-mid: #34d399,
+  checkbox-end: #16a34a,
+  checkbox-mark: #ecfdf5,
+);
+
+$colors-dark: (
+  bg: #0f172a,
+  surface: #0f172a,
+  surface-elevated: #1a2336,
+  border-subtle: #1e293b,
+  text: #e5e7eb,
+  text-muted: #9ca3af,
+  primary: #4f46e5,
+  primary-soft: rgba(79, 70, 229, 0.12),
+  on-primary: #ffffff,
+  danger: #ef4444,
+  accent: #22c55e,
+  priority-high: #ef4444,
+  priority-high-soft: rgba(239, 68, 68, 0.15),
+  priority-high-contrast: #fca5a5,
+  priority-medium: #6366f1,
+  priority-medium-soft: rgba(99, 102, 241, 0.15),
+  priority-medium-contrast: #c7d2fe,
+  priority-low: #22c55e,
+  priority-low-soft: rgba(34, 197, 94, 0.15),
+  priority-low-contrast: #bbf7d0,
+  status-active: #60a5fa,
+  status-active-soft: rgba(96, 165, 250, 0.15),
+  status-completed: #22c55e,
+  status-completed-soft: rgba(34, 197, 94, 0.15),
+  checkbox-bg: #111827,
+  checkbox-border: #1f2a44,
+  checkbox-hover-bg: #1f2a44,
+  checkbox-hover-border: #3b4b71,
+  checkbox-ring: rgba(129, 140, 248, 0.35),
+  checkbox-ring-strong: rgba(129, 140, 248, 0.7),
+  checkbox-start: #4ade80,
+  checkbox-mid: #22c55e,
+  checkbox-end: #15803d,
+  checkbox-mark: #ecfdf5,
+);
+
+$radius: (
+  sm: 4px,
+  md: 8px,
+  lg: 12px,
+  pill: 999px,
+);
+
+$space: (
+  xs: 4px,
+  sm: 8px,
+  md: 12px,
+  lg: 16px,
+  xl: 24px,
+  xxl: 32px,
+);
+
+@function color($key) {
+  @return var(--color-#{$key});
+}
+
+@function radius($key) {
+  @return map.get($radius, $key);
+}
+
+@function space($key) {
+  @return map.get($space, $key);
+}

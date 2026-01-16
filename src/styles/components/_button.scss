@@ -1,0 +1,68 @@
+.button {
+  --btn-bg: transparent;
+  --btn-color: var(--color-text);
+  --btn-border: transparent;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  padding-inline: 0.9rem;
+  padding-block: 0.55rem;
+
+  border-radius: 999px;
+  border: 1px solid var(--btn-border);
+  background-color: var(--btn-bg);
+  color: var(--btn-color);
+
+  font: inherit;
+  font-size: 0.875rem;
+  line-height: 1.2;
+
+  cursor: pointer;
+  transition: background-color 160ms ease-out, color 160ms ease-out,
+    transform 120ms ease-out, box-shadow 160ms ease-out;
+}
+
+.button--primary {
+  --btn-bg: var(--color-primary);
+  --btn-color: var(--color-on-primary);
+  --btn-border: transparent;
+}
+
+.button--secondary {
+  --btn-bg: var(--color-surface);
+  --btn-border: var(--color-border-subtle);
+}
+
+.button--ghost {
+  --btn-bg: transparent;
+  --btn-border: transparent;
+}
+
+.button--sm {
+  padding-inline: 0.75rem;
+  padding-block: 0.35rem;
+  font-size: 0.8rem;
+}
+
+.button--icon {
+  padding-inline: 0.45rem;
+  padding-block: 0.45rem;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.35);
+}
+
+.button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}

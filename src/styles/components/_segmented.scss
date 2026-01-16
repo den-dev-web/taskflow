@@ -1,0 +1,105 @@
+.segmented-control-wrapper {
+  display: flex;
+  align-items: flex-end;
+}
+
+.segmented-control {
+  position: relative;
+  display: inline-flex;
+
+  height: 36px; /* фиксируем удобную высоту как в Linear */
+  padding: 3px; /* меньше отступ → меньше «щелей» */
+
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 10px;
+
+  gap: 4px;
+  align-items: center;
+}
+
+.segmented-indicator {
+  position: absolute;
+  top: 3px; /* как padding контейнера */
+  bottom: 3px; /* вровень */
+  left: 3px;
+
+  height: calc(100% - 6px); /* идеально под контейнер */
+
+  background: var(--color-primary-soft);
+  border-radius: 8px;
+
+  transition: left 180ms cubic-bezier(0.4, 0, 0.2, 1),
+    width 180ms cubic-bezier(0.4, 0, 0.2, 1), opacity 120ms;
+
+  pointer-events: none;
+  opacity: 0;
+}
+
+.segment {
+  height: 30px; /* 36 - padding(3*2) = 30 */
+  line-height: 30px;
+  padding-inline: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border: none;
+  background: transparent;
+
+  border-radius: 6px;
+  font-size: 0.9rem;
+
+  cursor: pointer;
+  z-index: 2;
+  color: var(--color-text-muted);
+
+  transition: color 120ms;
+}
+
+.segment__icon {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.segment__icon svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.segment--status-active .segment__icon {
+  color: var(--color-status-active);
+}
+
+.segment--status-completed .segment__icon {
+  color: var(--color-status-completed);
+}
+
+.segment[aria-pressed="true"] {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .segmented-control {
+    width: 100%;
+    gap: 2px;
+  }
+
+  .segment {
+    flex: 1 1 0;
+    padding-inline: 8px;
+    font-size: 0.82rem;
+    gap: 6px;
+  }
+}

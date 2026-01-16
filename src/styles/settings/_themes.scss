@@ -1,0 +1,81 @@
+@use "tokens" as *;
+@use "sass:map";
+
+:root {
+  --color-bg: #{map.get($colors-light, bg)};
+  --color-surface: #{map.get($colors-light, surface)};
+  --color-surface-elevated: #{map.get($colors-light, surface-elevated)};
+  --color-border-subtle: #{map.get($colors-light, border-subtle)};
+  --color-text: #{map.get($colors-light, text)};
+  --color-text-muted: #{map.get($colors-light, text-muted)};
+  --color-primary: #{map.get($colors-light, primary)};
+  --color-primary-soft: #{map.get($colors-light, primary-soft)};
+  --color-on-primary: #{map.get($colors-light, on-primary)};
+  --color-danger: #{map.get($colors-light, danger)};
+  --color-accent: #{map.get($colors-light, accent)};
+  --color-priority-high: #{map.get($colors-light, priority-high)};
+  --color-priority-high-soft: #{map.get($colors-light, priority-high-soft)};
+  --color-priority-high-contrast: #{map.get($colors-light, priority-high-contrast)};
+  --color-priority-medium: #{map.get($colors-light, priority-medium)};
+  --color-priority-medium-soft: #{map.get($colors-light, priority-medium-soft)};
+  --color-priority-medium-contrast: #{map.get($colors-light, priority-medium-contrast)};
+  --color-priority-low: #{map.get($colors-light, priority-low)};
+  --color-priority-low-soft: #{map.get($colors-light, priority-low-soft)};
+  --color-priority-low-contrast: #{map.get($colors-light, priority-low-contrast)};
+  --color-status-active: #{map.get($colors-light, status-active)};
+  --color-status-active-soft: #{map.get($colors-light, status-active-soft)};
+  --color-status-completed: #{map.get($colors-light, status-completed)};
+  --color-status-completed-soft: #{map.get($colors-light, status-completed-soft)};
+  --color-checkbox-bg: #{map.get($colors-light, checkbox-bg)};
+  --color-checkbox-border: #{map.get($colors-light, checkbox-border)};
+  --color-checkbox-hover-bg: #{map.get($colors-light, checkbox-hover-bg)};
+  --color-checkbox-hover-border: #{map.get($colors-light, checkbox-hover-border)};
+  --color-checkbox-ring: #{map.get($colors-light, checkbox-ring)};
+  --color-checkbox-ring-strong: #{map.get($colors-light, checkbox-ring-strong)};
+  --color-checkbox-start: #{map.get($colors-light, checkbox-start)};
+  --color-checkbox-mid: #{map.get($colors-light, checkbox-mid)};
+  --color-checkbox-end: #{map.get($colors-light, checkbox-end)};
+  --color-checkbox-mark: #{map.get($colors-light, checkbox-mark)};
+
+  --radius-md: #{radius(md)};
+
+  --space-md: #{space(md)};
+  --space-lg: #{space(lg)};
+}
+
+html[data-theme="dark"] {
+  --color-bg: #{map.get($colors-dark, bg)};
+  --color-surface: #{map.get($colors-dark, surface)};
+  --color-surface-elevated: #{map.get($colors-dark, surface-elevated)};
+  --color-border-subtle: #{map.get($colors-dark, border-subtle)};
+  --color-text: #{map.get($colors-dark, text)};
+  --color-text-muted: #{map.get($colors-dark, text-muted)};
+  --color-primary: #{map.get($colors-dark, primary)};
+  --color-primary-soft: #{map.get($colors-dark, primary-soft)};
+  --color-on-primary: #{map.get($colors-dark, on-primary)};
+  --color-danger: #{map.get($colors-dark, danger)};
+  --color-accent: #{map.get($colors-dark, accent)};
+  --color-priority-high: #{map.get($colors-dark, priority-high)};
+  --color-priority-high-soft: #{map.get($colors-dark, priority-high-soft)};
+  --color-priority-high-contrast: #{map.get($colors-dark, priority-high-contrast)};
+  --color-priority-medium: #{map.get($colors-dark, priority-medium)};
+  --color-priority-medium-soft: #{map.get($colors-dark, priority-medium-soft)};
+  --color-priority-medium-contrast: #{map.get($colors-dark, priority-medium-contrast)};
+  --color-priority-low: #{map.get($colors-dark, priority-low)};
+  --color-priority-low-soft: #{map.get($colors-dark, priority-low-soft)};
+  --color-priority-low-contrast: #{map.get($colors-dark, priority-low-contrast)};
+  --color-status-active: #{map.get($colors-dark, status-active)};
+  --color-status-active-soft: #{map.get($colors-dark, status-active-soft)};
+  --color-status-completed: #{map.get($colors-dark, status-completed)};
+  --color-status-completed-soft: #{map.get($colors-dark, status-completed-soft)};
+  --color-checkbox-bg: #{map.get($colors-dark, checkbox-bg)};
+  --color-checkbox-border: #{map.get($colors-dark, checkbox-border)};
+  --color-checkbox-hover-bg: #{map.get($colors-dark, checkbox-hover-bg)};
+  --color-checkbox-hover-border: #{map.get($colors-dark, checkbox-hover-border)};
+  --color-checkbox-ring: #{map.get($colors-dark, checkbox-ring)};
+  --color-checkbox-ring-strong: #{map.get($colors-dark, checkbox-ring-strong)};
+  --color-checkbox-start: #{map.get($colors-dark, checkbox-start)};
+  --color-checkbox-mid: #{map.get($colors-dark, checkbox-mid)};
+  --color-checkbox-end: #{map.get($colors-dark, checkbox-end)};
+  --color-checkbox-mark: #{map.get($colors-dark, checkbox-mark)};
+}

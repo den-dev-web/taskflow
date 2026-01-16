@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/assets/icons/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>TaskFlow — менеджер задач</title>
+
+    <meta
+      name="description"
+      content="TaskFlow — продакшн To-Do менеджер задач с фильтрами, темами и LocalStorage."
+    />
+
+    <style>
+      .o-container {
+        width: min(100% - 32px, 1200px);
+        margin-inline: auto;
+      }
+
+      html {
+        font-size: 16px;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "SF Pro Display", system-ui, sans-serif;
+        background-color: var(--color-bg, #f8fafc);
+        color: var(--color-text, #0f172a);
+        line-height: 1.5;
+      }
+    </style>
+    <link rel="stylesheet" href="/main.scss" />
+  </head>
+  <body class="app">
+    <div class="app__root">
+      <!-- HEADER -->
+      <header class="app-header">
+        <div class="o-container app-header__inner">
+          <div class="app-header__left">
+            <div class="app-header__logo">✓</div>
+
+            <div class="app-header__titles">
+              <h1 class="app-header__title">TaskFlow</h1>
+              <p class="app-header__subtitle">
+                Менеджер задач для повседневной работы
+              </p>
+            </div>
+          </div>
+
+          <div class="app-header__right">
+            <button
+              data-theme-toggle
+              class="switch"
+              type="button"
+              aria-label="Переключить тему"
+            >
+              <span class="switch__icon switch__icon--light" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="4.5" />
+                  <path d="M12 3V5" />
+                  <path d="M12 19V21" />
+                  <path d="M4.2 4.2L5.6 5.6" />
+                  <path d="M18.4 18.4L19.8 19.8" />
+                  <path d="M3 12H5" />
+                  <path d="M19 12H21" />
+                  <path d="M4.2 19.8L5.6 18.4" />
+                  <path d="M18.4 5.6L19.8 4.2" />
+                </svg>
+              </span>
+              <span class="switch__icon switch__icon--dark" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z" />
+                </svg>
+              </span>
+            </button>
+
+            <button
+              class="button button--primary app-header__cta"
+              type="button"
+              data-action="open-create-modal"
+            >
+              Новая задача
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- MAIN -->
+      <main class="app-main">
+        <div class="o-container app-main__container">
+          <!-- Панель управления -->
+          <section class="toolbar" data-toolbar data-active-tab="status">
+            <div class="toolbar-tabs" data-toolbar-tabs>
+              <button
+                class="toolbar-tab"
+                type="button"
+                data-toolbar-tab="status"
+                aria-selected="true"
+                aria-label="Статус"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="8" />
+                  <path d="M8.5 12.5L11 15L15.5 9.5" />
+                </svg>
+              </button>
+              <button
+                class="toolbar-tab"
+                type="button"
+                data-toolbar-tab="priority"
+                aria-selected="false"
+                aria-label="Приоритет"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 4V20" />
+                  <path d="M6 4H18L16 8L18 12H6" />
+                </svg>
+              </button>
+              <button
+                class="toolbar-tab"
+                type="button"
+                data-toolbar-tab="sort"
+                aria-selected="false"
+                aria-label="Сортировка"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 6V18" />
+                  <path d="M5.5 8.5L8 6L10.5 8.5" />
+                  <path d="M16 18V6" />
+                  <path d="M13.5 15.5L16 18L18.5 15.5" />
+                </svg>
+              </button>
+              <button
+                class="toolbar-tab"
+                type="button"
+                data-toolbar-tab="search"
+                aria-selected="false"
+                aria-label="Поиск"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="11" cy="11" r="6" />
+                  <path d="M20 20L16.5 16.5" />
+                </svg>
+              </button>
+            </div>
+            <!-- Search -->
+            <div class="toolbar__search toolbar__panel" data-tab-panel="search">
+              <label class="field">
+                <span class="field__label">Поиск</span>
+                <div class="field__control">
+                  <input
+                    class="input"
+                    type="search"
+                    placeholder="Найти задачу..."
+                    data-filter="search"
+                  />
+                </div>
+              </label>
+            </div>
+
+            <!-- Status group -->
+            <div class="toolbar__col toolbar__panel" data-tab-panel="status">
+              <label class="field">
+                <span class="field__label">Статус</span>
+                <div class="field__control">
+                  <div class="segmented-control" data-segmented>
+                    <div class="segmented-indicator" data-indicator></div>
+
+                    <button
+                      class="segment"
+                      data-filter="status"
+                      data-filter-value="all"
+                      aria-pressed="true"
+                    >
+                      Все
+                    </button>
+                    <button
+                      class="segment segment--status-active"
+                      data-filter="status"
+                      data-filter-value="active"
+                    >
+                      <span class="segment__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                          <rect x="5" y="5" width="14" height="14" rx="3" />
+                        </svg>
+                      </span>
+                      Активные
+                    </button>
+                    <button
+                      class="segment segment--status-completed"
+                      data-filter="status"
+                      data-filter-value="completed"
+                    >
+                      <span class="segment__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                          <rect x="5" y="5" width="14" height="14" rx="3" />
+                          <path d="M9 12.5l2.5 2.5L15 10" />
+                        </svg>
+                      </span>
+                      Выполненные
+                    </button>
+                  </div>
+                </div>
+              </label>
+            </div>
+            <!-- Priority (custom select) -->
+            <div
+              class="toolbar__field toolbar__panel"
+              data-tab-panel="priority"
+            >
+              <span class="field__label">Приоритет</span>
+
+              <div
+                class="select-custom"
+                data-select
+                data-select-type="priority"
+              >
+                <button
+                  class="select-trigger"
+                  data-select-trigger
+                  type="button"
+                >
+                  <span class="select-value" data-select-value>Все</span>
+                  <span class="select-icon">
+                    <svg class="icon icon-down" viewBox="0 0 24 24">
+                      <path d="M6 9L12 15L18 9" />
+                    </svg>
+                    <svg class="icon icon-dash" viewBox="0 0 24 24">
+                      <path d="M6 12H18" />
+                    </svg>
+                    <svg class="icon icon-up" viewBox="0 0 24 24">
+                      <path d="M6 15L12 9L18 15" />
+                    </svg>
+                  </span>
+                </button>
+
+                <div class="select-dropdown" data-select-dropdown hidden>
+                  <ul class="select-options" role="listbox">
+                    <li
+                      class="select-option"
+                      role="option"
+                      aria-selected="true"
+                      data-value="all"
+                    >
+                      Все
+                    </li>
+                    <li
+                      class="select-option"
+                      tabindex="0"
+                      role="option"
+                      data-value="high"
+                    >
+                      Высокий
+                    </li>
+                    <li
+                      class="select-option"
+                      tabindex="0"
+                      role="option"
+                      data-value="medium"
+                    >
+                      Средний
+                    </li>
+                    <li
+                      class="select-option"
+                      tabindex="0"
+                      role="option"
+                      data-value="low"
+                    >
+                      Низкий
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sort (custom select) -->
+            <div class="toolbar__field toolbar__panel" data-tab-panel="sort">
+              <span class="field__label">Сортировать</span>
+
+              <div class="select-custom" data-select data-select-type="sort">
+                <button
+                  class="select-trigger"
+                  data-select-trigger
+                  type="button"
+                >
+                  <span class="select-value" data-select-value
+                    >Новые сверху</span
+                  >
+                  <span class="select-icon">
+                    <svg class="icon icon-down" viewBox="0 0 24 24">
+                      <path d="M6 9L12 15L18 9" />
+                    </svg>
+                    <svg class="icon icon-dash" viewBox="0 0 24 24">
+                      <path d="M6 12H18" />
+                    </svg>
+                    <svg class="icon icon-up" viewBox="0 0 24 24">
+                      <path d="M6 15L12 9L18 15" />
+                    </svg>
+                  </span>
+                </button>
+
+                <div class="select-dropdown" data-select-dropdown hidden>
+                  <ul class="select-options" role="listbox">
+                    <li class="select-option" role="option" data-value="manual">
+                      Пользовательский
+                    </li>
+                    <li
+                      class="select-option"
+                      role="option"
+                      aria-selected="true"
+                      data-value="createdAt-desc"
+                    >
+                      Новые сверху
+                    </li>
+                    <li
+                      class="select-option"
+                      role="option"
+                      data-value="createdAt-asc"
+                    >
+                      Старые сверху
+                    </li>
+                    <li
+                      class="select-option"
+                      role="option"
+                      data-value="priority-desc"
+                    >
+                      Приоритет ↓
+                    </li>
+                    <li
+                      class="select-option"
+                      role="option"
+                      data-value="priority-asc"
+                    >
+                      Приоритет ↑
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Список задач -->
+          <section class="task-list" aria-labelledby="task-list-title">
+            <!-- Состояние загрузки (skeleton) -->
+            <div class="task-list__skeleton" data-state="loading" hidden>
+              <div class="task-card task-card--skeleton"></div>
+              <div class="task-card task-card--skeleton"></div>
+              <div class="task-card task-card--skeleton"></div>
+            </div>
+
+            <!-- Пустое состояние -->
+            <div class="empty-state" data-state="empty" hidden>
+              <div class="empty-state__icon" aria-hidden="true">📝</div>
+              <p class="empty-state__title">Задач пока нет</p>
+              <p class="empty-state__text">
+                Нажми «Новая задача», чтобы добавить первую.
+              </p>
+              <button
+                class="button button--primary"
+                type="button"
+                data-action="open-create-modal"
+              >
+                Создать задачу
+              </button>
+            </div>
+
+            <!-- Ошибка LocalStorage -->
+            <div
+              class="empty-state empty-state--error"
+              data-state="error"
+              hidden
+            >
+              <div class="empty-state__icon" aria-hidden="true">⚠️</div>
+              <p class="empty-state__title">Ошибка данных</p>
+              <p class="empty-state__text">
+                Не удалось получить доступ к локальному хранилищу. Задачи не
+                будут сохраняться.
+              </p>
+            </div>
+
+            <!-- Реальный список задач -->
+            <ul class="task-list__items" data-tasks-root aria-live="polite">
+              <!-- JS будет рендерить <li> с .task-card -->
+            </ul>
+          </section>
+        </div>
+      </main>
+
+      <!-- FOOTER -->
+      <footer class="app-footer">
+        <div class="o-container app-footer__inner">
+          <p class="app-footer__text">
+            TaskFlow · Локальный менеджер задач ·
+            <span data-footer-year></span>
+          </p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- МОДАЛ: создание/редактирование задачи -->
+    <div
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="task-modal-title"
+      hidden
+      data-modal="task"
+      data-state="closed"
+    >
+      <div class="modal__backdrop" data-modal-backdrop></div>
+
+      <div class="modal__dialog" role="document">
+        <header class="modal__header" data-modal-drag-handle>
+          <h2 id="task-modal-title" class="modal__title" data-modal-title>
+            Новая задача
+          </h2>
+          <button
+            class="button button--ghost button--icon modal__close"
+            type="button"
+            aria-label="Закрыть модальное окно"
+            data-modal-close
+          >
+            ×
+          </button>
+        </header>
+
+        <form class="modal__body" data-task-form novalidate>
+          <div class="modal__field-group">
+            <label class="field">
+              <span class="field__label">Заголовок</span>
+              <div class="field__control">
+                <input
+                  class="input"
+                  type="text"
+                  name="title"
+                  required
+                  minlength="3"
+                  maxlength="120"
+                  placeholder="Краткое описание задачи"
+                />
+              </div>
+              <span class="field__error" data-error-for="title"></span>
+            </label>
+
+            <label class="field">
+              <span class="field__label">Описание</span>
+              <div class="field__control">
+                <textarea
+                  class="input input--textarea"
+                  name="description"
+                  rows="3"
+                  maxlength="500"
+                  placeholder="Детали, чек-лист, ссылки..."
+                ></textarea>
+              </div>
+              <span class="field__error" data-error-for="description"></span>
+            </label>
+
+            <div class="modal__row">
+              <label class="field modal__field--inline">
+                <span class="field__label">Приоритет</span>
+                <input type="hidden" name="priority" value="medium" />
+                <div
+                  class="select-custom"
+                  data-select
+                  data-select-type="modal-priority"
+                >
+                  <button
+                    class="select-trigger"
+                    type="button"
+                    data-select-trigger
+                  >
+                    <span class="select-value" data-select-value>Средний</span>
+                    <span class="select-icon">
+                      <svg class="icon icon-down" viewBox="0 0 24 24">
+                        <path d="M6 9L12 15L18 9" />
+                      </svg>
+                      <svg class="icon icon-dash" viewBox="0 0 24 24">
+                        <path d="M6 12H18" />
+                      </svg>
+                      <svg class="icon icon-up" viewBox="0 0 24 24">
+                        <path d="M6 15L12 9L18 15" />
+                      </svg>
+                    </span>
+                  </button>
+
+                  <div class="select-dropdown" data-select-dropdown hidden>
+                    <ul class="select-options" role="listbox">
+                      <li class="select-option" tabindex="0" data-value="high">
+                        Высокий
+                      </li>
+                      <li
+                        class="select-option"
+                        data-value="medium"
+                        aria-selected="true"
+                      >
+                        Средний
+                      </li>
+                      <li class="select-option" tabindex="0" data-value="low">
+                        Низкий
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <span class="field__error" data-error-for="priority"></span>
+              </label>
+              <label class="field modal__field--inline">
+                <span class="field__label">Статус</span>
+                <input type="hidden" name="completed" value="false" />
+                <div
+                  class="select-custom"
+                  data-select
+                  data-select-type="modal-status"
+                >
+                  <button
+                    class="select-trigger"
+                    type="button"
+                    data-select-trigger
+                  >
+                    <span class="select-value" data-select-value>Активная</span>
+                    <span class="select-icon">
+                      <svg class="icon icon-down" viewBox="0 0 24 24">
+                        <path d="M6 9L12 15L18 9" />
+                      </svg>
+                      <svg class="icon icon-dash" viewBox="0 0 24 24">
+                        <path d="M6 12H18" />
+                      </svg>
+                      <svg class="icon icon-up" viewBox="0 0 24 24">
+                        <path d="M6 15L12 9L18 15" />
+                      </svg>
+                    </span>
+                  </button>
+
+                  <div class="select-dropdown" data-select-dropdown hidden>
+                    <ul class="select-options" role="listbox">
+                      <li
+                        class="select-option"
+                        data-value="false"
+                        aria-selected="true"
+                      >
+                        Активная
+                      </li>
+                      <li class="select-option" tabindex="0" data-value="true">
+                        Выполнена
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <footer class="modal__footer">
+            <div
+              class="modal__status"
+              role="status"
+              aria-live="polite"
+              data-form-status
+            ></div>
+
+            <div class="modal__actions">
+              <button
+                class="button button--secondary"
+                type="button"
+                data-modal-close
+              >
+                Отмена
+              </button>
+
+              <button
+                class="button button--primary"
+                type="submit"
+                data-state="idle"
+                data-submit-button
+              >
+                <span class="button__spinner" aria-hidden="true"></span>
+                <span class="button__label" data-submit-label>Сохранить</span>
+              </button>
+            </div>
+          </footer>
+        </form>
+      </div>
+    </div>
+
+    <!-- Шаблон карточки задачи (для JS cloneNode или innerHTML) -->
+    <template id="task-card-template">
+      <li class="task-item">
+        <article
+          class="task-card"
+          data-task-id=""
+          data-state=""
+          data-priority=""
+        >
+          <div class="task-card__header">
+            <button
+              class="task-checkbox"
+              type="button"
+              data-action="toggle-completed"
+              data-task-checkbox
+              aria-label="Переключить состояние задачи"
+            ></button>
+            <div class="task-card__reorder" aria-label="Перемещение задачи">
+              <button
+                class="task-card__drag-handle"
+                type="button"
+                data-drag-handle
+                draggable="true"
+                aria-label="Перетащить задачу"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="8" cy="7" r="1.6" />
+                  <circle cx="8" cy="12" r="1.6" />
+                  <circle cx="8" cy="17" r="1.6" />
+                  <circle cx="16" cy="7" r="1.6" />
+                  <circle cx="16" cy="12" r="1.6" />
+                  <circle cx="16" cy="17" r="1.6" />
+                </svg>
+              </button>
+              <button
+                class="task-card__reorder-button"
+                type="button"
+                data-action="move-up"
+                aria-label="Переместить задачу вверх"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 18V6" />
+                  <path d="M7.5 10.5L12 6L16.5 10.5" />
+                </svg>
+              </button>
+              <button
+                class="task-card__reorder-button"
+                type="button"
+                data-action="move-down"
+                aria-label="Переместить задачу вниз"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 6v12" />
+                  <path d="M7.5 13.5L12 18l4.5-4.5" />
+                </svg>
+              </button>
+            </div>
+            <button
+              class="task-card__menu-button"
+              data-action="open-context-menu"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <circle cx="12" cy="5" r="1.5" />
+                <circle cx="12" cy="12" r="1.5" />
+                <circle cx="12" cy="19" r="1.5" />
+              </svg>
+            </button>
+          </div>
+
+          <h3 class="task-card__title" data-task-title></h3>
+          <p class="task-card__description" data-task-description></p>
+
+          <div class="task-card__meta">
+            <span class="task-priority" data-task-priority>
+              <span class="dot"></span>
+            </span>
+            <time data-task-date></time>
+          </div>
+        </article>
+      </li>
+    </template>
+
+    <div class="context-menu" data-context-menu hidden>
+      <button data-context="edit">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 20h9" />
+          <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+        </svg>
+        Редактировать
+      </button>
+      <button data-context="subtask">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M4 6h8" />
+          <path d="M4 12h8" />
+          <path d="M4 18h8" />
+          <path d="M15 12h6" />
+          <path d="M18 9v6" />
+        </svg>
+        Подзадача
+      </button>
+      <button data-context="delete">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M3 6h18" />
+          <path d="M8 6V4h8v2" />
+          <path d="M10 11v6" />
+          <path d="M14 11v6" />
+          <path d="M5 6l1 14h12l1-14" />
+        </svg>
+        Удалить
+      </button>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
